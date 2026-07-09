@@ -30,7 +30,7 @@ pipeline {
         stage('Check Docker Credential') {
             steps {
                 withCredentials([usernamePassword(
-                    credentialsId: 'docker-cred123',
+                    credentialsId: 'docker-hubnew',
                     usernameVariable: 'DOCKER_USER',
                     passwordVariable: 'DOCKER_PASS'
                 )]) {
