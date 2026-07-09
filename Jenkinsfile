@@ -2,8 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKERHUB_CREDENTIALS = credentials('mhdshameen10')
-        IMAGE_NAME = "mhdshameen10/docker-build"
+        IMAGE_NAME = "mhdshameen10/jenkins-job"
         IMAGE_TAG = "latest"
         TRIVY = "C:\\Users\\Shameen\\AppData\\Local\\Microsoft\\WinGet\\Packages\\AquaSecurity.Trivy_Microsoft.Winget.Source_8wekyb3d8bbwe\\trivy.exe"
     }
@@ -18,36 +17,61 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                bat '''
-                docker build -t %IMAGE_NAME%:%IMAGE_TAG% .
-                '''
+                bat 'docker build -t %IMAGE_NAME%:%IMAGE_TAG% .'
             }
         }
 
         stage('Trivy Image Scan') {
             steps {
+                bat '"%TRIVY%" image --scanners vuln --severity HIGH,CRITICAL %IMAGE_NAME%:%IMAGE_TAG%'
+            }
+        }
+
+        stage('Check Docker Credential') {
+            steps {
+                withCredentials([usernamePassword(
+                    credentialsId: 'docker-cred123',
+                    usernameVariable: 'DOCKER_USER',
+                    passwordVariable: 'DOCKER_PASS'
+                )]) {
+                    bat '''
+                    echo Docker Username: %DOCKER_USER%
+                    powershell -Command "Write-Host Password Length: $($env:DOCKER_PASS.Length)"
+                    '''
+                }
+            }
+        }
+
+        stage('Docker Info') {
+            steps {
                 bat '''
-                "%TRIVY%" image --scanners vuln --severity HIGH,CRITICAL %IMAGE_NAME%:%IMAGE_TAG%
+                where docker
+                docker --version
+                docker info
                 '''
             }
         }
 
         stage('Login to Docker Hub') {
             steps {
-                bat '''
-                echo %DOCKERHUB_CREDENTIALS_PSW% | docker login -u %DOCKERHUB_CREDENTIALS_USR% --password-stdin
-                '''
+                withCredentials([usernamePassword(
+                    credentialsId: 'docker-cred123',
+                    usernameVariable: 'DOCKER_USER',
+                    passwordVariable: 'DOCKER_PASS'
+                )]) {
+                    bat '''
+                    docker logout
+                    echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin
+                    '''
+                }
             }
         }
 
         stage('Push Image to Docker Hub') {
             steps {
-                bat '''
-                docker push %IMAGE_NAME%:%IMAGE_TAG%
-                '''
+                bat 'docker push %IMAGE_NAME%:%IMAGE_TAG%'
             }
         }
-
     }
 
     post {
