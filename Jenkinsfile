@@ -17,17 +17,13 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                bat '''
-                docker build -t %IMAGE_NAME%:%IMAGE_TAG% .
-                '''
+                bat 'docker build -t %IMAGE_NAME%:%IMAGE_TAG% .'
             }
         }
 
         stage('Trivy Image Scan') {
             steps {
-                bat '''
-                "%TRIVY%" image --scanners vuln --severity HIGH,CRITICAL %IMAGE_NAME%:%IMAGE_TAG%
-                '''
+                bat '"%TRIVY%" image --scanners vuln --severity HIGH,CRITICAL %IMAGE_NAME%:%IMAGE_TAG%'
             }
         }
 
@@ -48,9 +44,7 @@ pipeline {
 
         stage('Push Image to Docker Hub') {
             steps {
-                bat '''
-                docker push %IMAGE_NAME%:%IMAGE_TAG%
-                '''
+                bat 'docker push %IMAGE_NAME%:%IMAGE_TAG%'
             }
         }
     }
