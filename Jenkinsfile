@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         DOCKERHUB_CREDENTIALS = credentials('dockerhub-creds123')
-        IMAGE_NAME = "shameen/jenkins-job"
+        IMAGE_NAME = "mhdshameen10/jenkins-job"
         IMAGE_TAG = "latest"
     }
 
