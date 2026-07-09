@@ -4,7 +4,7 @@ pipeline {
     environment {
         IMAGE_NAME = "mhdshameen10/jenkins-job"
         IMAGE_TAG = "latest"
-        TRIVY = "C:\\Users\\Shameen\\AppData\\Local\\Microsoft\\WinGet\\Packages\\AquaSecurity.Trivy_Microsoft.WingGet.Source_8wekyb3d8bbwe\\trivy.exe"
+        TRIVY = "C:\\Users\\Shameen\\AppData\\Local\\Microsoft\\WinGet\\Packages\\AquaSecurity.Trivy_Microsoft.Winget.Source_8wekyb3d8bbwe\\trivy.exe"
     }
 
     stages {
@@ -23,6 +23,7 @@ pipeline {
 
         stage('Trivy Image Scan') {
             steps {
+                bat '"%TRIVY%" --version'
                 bat '"%TRIVY%" image --scanners vuln --severity HIGH,CRITICAL %IMAGE_NAME%:%IMAGE_TAG%'
             }
         }
@@ -45,7 +46,6 @@ pipeline {
         stage('Docker Info') {
             steps {
                 bat '''
-                where docker
                 docker --version
                 docker info
                 '''
@@ -60,7 +60,6 @@ pipeline {
                     passwordVariable: 'DOCKER_PASS'
                 )]) {
                     bat '''
-                    docker logout
                     echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin
                     '''
                 }
