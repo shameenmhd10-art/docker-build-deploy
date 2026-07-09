@@ -4,7 +4,7 @@ pipeline {
     environment {
         IMAGE_NAME = "mhdshameen10/jenkins-job"
         IMAGE_TAG = "latest"
-        TRIVY = "C:\\Users\\Shameen\\AppData\\Local\\Microsoft\\WinGet\\Packages\\AquaSecurity.Trivy_Microsoft.Winget.Source_8wekyb3d8bbwe\\trivy.exe"
+        TRIVY = "C:\\Users\\Shameen\\AppData\\Local\\Microsoft\\WinGet\\Packages\\AquaSecurity.Trivy_Microsoft.WingGet.Source_8wekyb3d8bbwe\\trivy.exe"
     }
 
     stages {
@@ -30,7 +30,7 @@ pipeline {
         stage('Check Docker Credential') {
             steps {
                 withCredentials([usernamePassword(
-                    credentialsId: 'docker-cred123',
+                    credentialsId: 'docker123',
                     usernameVariable: 'DOCKER_USER',
                     passwordVariable: 'DOCKER_PASS'
                 )]) {
@@ -55,7 +55,7 @@ pipeline {
         stage('Login to Docker Hub') {
             steps {
                 withCredentials([usernamePassword(
-                    credentialsId: 'docker-123',
+                    credentialsId: 'docker123',
                     usernameVariable: 'DOCKER_USER',
                     passwordVariable: 'DOCKER_PASS'
                 )]) {
