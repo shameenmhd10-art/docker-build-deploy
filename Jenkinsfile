@@ -38,18 +38,17 @@ pipeline {
         }
 
         stage('Login to Docker Hub') {
-            steps {
-                withCredentials([usernamePassword(
-                    credentialsId: 'abcd',
-                    usernameVariable: 'DOCKER_USER',
-                    passwordVariable: 'DOCKER_PASS'
-                )]) {
-                    bat '''
-                    echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin
-                    '''
-                }
-            }
+    steps {
+        withCredentials([usernamePassword(
+            credentialsId: 'abcd',
+            usernameVariable: 'DOCKER_USER',
+            passwordVariable: 'DOCKER_PASS'
+        )]) {
+            // Notice there is NO space between %DOCKER_PASS% and |
+            bat 'echo %DOCKER_PASS%| docker login -u %DOCKER_USER% --password-stdin'
         }
+    }
+}
 
         stage('Push Image to Docker Hub') {
             steps {
