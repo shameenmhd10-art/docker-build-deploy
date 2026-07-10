@@ -28,21 +28,6 @@ pipeline {
             }
         }
 
-        stage('Check Docker Credential') {
-            steps {
-                withCredentials([usernamePassword(
-                    credentialsId: 'abcd',
-                    usernameVariable: 'DOCKER_USER',
-                    passwordVariable: 'DOCKER_PASS'
-                )]) {
-                    bat '''
-                    echo Docker Username: %DOCKER_USER%
-                    powershell -Command "Write-Host Password Length: $($env:DOCKER_PASS.Length)"
-                    '''
-                }
-            }
-        }
-
         stage('Docker Info') {
             steps {
                 bat '''
