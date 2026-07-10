@@ -31,7 +31,7 @@ pipeline {
         stage('Check Docker Credential') {
             steps {
                 withCredentials([usernamePassword(
-                    credentialsId: 'docker111',
+                    credentialsId: 'abcd',
                     usernameVariable: 'DOCKER_USER',
                     passwordVariable: 'DOCKER_PASS'
                 )]) {
@@ -55,7 +55,7 @@ pipeline {
         stage('Login to Docker Hub') {
             steps {
                 withCredentials([usernamePassword(
-                    credentialsId: 'docker111',
+                    credentialsId: 'abcd',
                     usernameVariable: 'DOCKER_USER',
                     passwordVariable: 'DOCKER_PASS'
                 )]) {
